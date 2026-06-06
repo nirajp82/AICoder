@@ -10,7 +10,7 @@ Think of an LLM (like GPT) as a super-powered version of the "autocomplete" feat
 
 ### The Complete Inference Loop
 
-Here is the finished example from the transcript showing how the AI loops your text to generate the answer step-by-step:
+Here is the showing how the AI loops your text to generate the answer step-by-step:
 
 | Step | What the AI Reads (The Input Sequence) | What the AI Guesses Next |
 | --- | --- | --- |
