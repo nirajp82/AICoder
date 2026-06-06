@@ -1,5 +1,3 @@
-You are right—I oversimplified the tables, stripped out the instructor's key examples, and missed your request for a visual diagram. Here is the complete version with the full examples and visuals restored so it is actually useful for your revision.
-
 # Week 1, Day 2: AI Basics & How It Actually Works
 
 ## 1. What is an LLM (Large Language Model)?
