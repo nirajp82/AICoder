@@ -14,41 +14,6 @@ To engineer context properly, you must understand all the different components t
 
 #### Native Markdown Backup Diagram (Dark Theme Optimized):
 
-```mermaid
-flowchart TD
-    subgraph Stack [The Context Window Stack]
-        direction TB
-        SP[System Prompt: overall framing]
-        T[Tools: description of capabilities]
-        M[Memory: resources that persist]
-        
-        subgraph CH [Conversation History / Messages]
-            direction TB
-            U[User messages]
-            R[LLM reasoning]
-            Rep[LLM replies]
-            C[Code generated]
-            TC[Tools called]
-            Res[Results of code and tools]
-            
-            U ~~~ R ~~~ Rep ~~~ C ~~~ TC ~~~ Res
-        end
-        
-        SP ~~~ T ~~~ M ~~~ CH
-    end
-    
-    classDef layer1 fill:none,stroke:#818cf8,stroke-width:3px,color:#e0e7ff;
-    classDef layer2 fill:none,stroke:#60a5fa,stroke-width:3px,color:#dbeafe;
-    classDef layer3 fill:none,stroke:#9333ea,stroke-width:3px,color:#9333ea;
-    classDef layer4 fill:none,stroke:#a78bfa,stroke-width:3px,color:#ddd6fe;
-    
-    class SP layer1;
-    class T layer2;
-    class M layer3;
-    class CH layer4;
-
-```
-
 ---
 
 ## Real-World Example: Building a .NET Microservice
@@ -63,7 +28,6 @@ Here is the exact breakdown of the context layers alongside a concrete, step-by-
 > *"You are an elite backend software engineer specializing in C# and .NET 8. Your objective is to build high-performance, scalable microservices. You must write clean, asynchronous C# code, utilize dependency injection strictly, use structured routing architectures, and always communicate your architectural decisions clearly before generating code."*
 
 
-
 ### Layer 2: Tools
 
 * **What it is:** A set of descriptions detailing the different capabilities and actions the LLM has access to. *(Note: Some developers consider tool descriptions to be a definitional part of the System Prompt itself; it doesn't particularly matter if you think of them as the same thing or two separate chunks, it is just about how you label it).*
@@ -72,14 +36,12 @@ Here is the exact breakdown of the context layers alongside a concrete, step-by-
 > *"You have access to the `dotnet_cli` tool. If you need to add a NuGet package, output the command `dotnet add package [PackageName]`. You also have access to `ef_core_migrations`. Use this tool to execute `dotnet ef database update` when database schemas change."*
 
 
-
 ### Layer 3: Memory
 
 * **What it is:** Information designed to persist across potentially multiple different conversations, sometimes referred to as long-term or medium-term memory.
 * **Purpose:** To store general resources and global configurations that might change over time, but that the agent should always be able to return and reference.
 * **Microservice Instruction Example:**
 > *"Global Engineering Standards: All microservices in this organization must use Serilog for structured logging. Databases must use PostgreSQL via Entity Framework Core. Authentication is always handled via standard JWT bearer tokens validated against Azure Active Directory."*
-
 
 
 ### Layer 4: Conversation History / Messages
@@ -100,8 +62,6 @@ Here is the exact breakdown of the context layers alongside a concrete, step-by-
 * **Generated Code Response:** `public class Product { public Guid Id { get; set; } public string Name { get; set; } public decimal Price { get; set; } }`
 * **Tool Execution:** The wrapper intercepts a request to run `dotnet build`.
 * **Tool Return Result:** `Build succeeded. 0 Warning(s). 0 Error(s).` All of this history is combined to frame the next token calculation.
-
-
 
 ---
 
@@ -151,36 +111,6 @@ To prevent the context window from filling up and causing errors, advanced platf
 
 #### Native Markdown Backup Diagram (Dark Theme Optimized):
 
-```mermaid
-flowchart TD
-    subgraph CompactedStack [Compacting: Freeing up space in the context]
-        direction TB
-        SP[System Prompt: overall framing]
-        T[Tools: description of capabilities]
-        M[Memory: resources that persist]
-        A[AGENTS.md]
-        
-        subgraph CH [Conversation History / Messages]
-            direction TB
-            Summ[Summary of earlier messages]
-        end
-        
-        SP ~~~ T ~~~ M ~~~ A ~~~ CH
-    end
-    
-    classDef layer1 fill:none,stroke:#818cf8,stroke-width:3px,color:#e0e7ff;
-    classDef layer2 fill:none,stroke:#60a5fa,stroke-width:3px,color:#dbeafe;
-    classDef layer3 fill:none,stroke:#9333ea,stroke-width:3px,color:#9333ea;
-    classDef layerYellow fill:none,stroke:#fbbf24,stroke-width:3px,color:#fbbf24;
-    classDef layer4 fill:none,stroke:#a78bfa,stroke-width:3px,color:#ddd6fe;
-    
-    class SP layer1;
-    class T layer2;
-    class M layer3;
-    class A layerYellow;
-    class CH layer4;
-
-```
 
 * **How it Works:** Rather than allowing the LLM to fail, the software detects when the context window is almost filled up. It runs a process that essentially looks back at the whole conversation history, summarizes it, and replaces everything with a little summary of what was there before, freeing up tons of space in the workspace.
 
