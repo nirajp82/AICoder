@@ -67,12 +67,19 @@ The raw AI brain is actually pretty basic. To make it feel like you are chatting
 > 
 > 
 
-### Trick 3: The "Manager with No Hands" (Tool Calling)
+### Trick 3: The "Text-to-Action" Protocol (Tool Calling)
 
-* **The Problem:** The raw AI brain cannot "do" anything. It cannot open a browser, it cannot calculate math, and it cannot save a file. It only predicts words. If you ask it a hard math question like "What is the square root of Pi?", its autocomplete engine will probably just guess a wrong number.
-* **The Metaphor:** Imagine a brilliant Manager locked in an empty room. They have no computer, no calculator, and no internet. They only have a notepad to slide notes under the door to you (the AI software wrapper standing outside the room).
-* **The Trick:** You slide a rule under the door: *"Hey Manager, if you ever need to do math, don't guess. Just write `PYTHON: [math problem]` and slide it back to me. I will use my calculator, find the answer, and slide it back to you."*
-* **How it Works in Practice (Browser vs. Thick Client):** Where this code actually executes depends entirely on the architecture of the application wrapper you are using.
+* **The Problem:** The raw AI brain is entirely disconnected from the outside world. It cannot open a browser, crunch numbers, or save files. It only predicts words. If forced to answer a complex math problem, it will just blindly guess a number.
+* **The Concept (Text as a Remote Control):** Because the AI can only generate text, developers realized they could use that text as a command trigger. We teach the AI to stop guessing and instead write a specific text command asking the *software* to do the work.
+* **The Trick:** In the hidden background instructions, the software wrapper tells the AI: *"You have access to a Python environment. If you need to do math, do not guess. Instead, output the exact string `PYTHON: [your code here]`."*
+* **How it Works in Practice:**
+1. You ask the AI: "What is the square root of Pi?"
+2. The AI realizes its autocomplete can't solve this accurately, so it generates the special text token: `PYTHON: import math; math.sqrt(math.pi)`.
+3. **The secret intercept:** The AI *does not run this code*. Your software wrapper sees the word `PYTHON:`, instantly pauses the AI, takes that code, runs it on the computer, gets the exact answer (`1.772`), and secretly pastes that answer back into the AI's context window.
+4. The AI reads the injected answer, and then confidently translates it into a normal, human-readable sentence for you.
+
+* **The Pro Takeaway:** The LLM itself *never used a tool*. It just used its autocomplete engine to generate a text request, and the software wrapper acted as the hands that did the actual work.
+* **Where it Executes (Browser vs. Thick Client):** Where this intercept actually executes the code depends entirely on the architecture of the application wrapper you are using.
 
 #### 1. The Browser Setup (e.g., ChatGPT.com)
 
@@ -86,37 +93,49 @@ The raw AI brain is actually pretty basic. To make it feel like you are chatting
 
 #### Architecture Diagram: The Secret Intercept
 
+Mermaid can sometimes try to squash subgraphs side-by-side, which creates a tangled, unreadable spiderweb of arrows.
+
+To fix this and make it perfectly readable, we can do two things:
+
+1. Add an "invisible link" (`~~~`) between the two boxes to force Mermaid to stack them strictly top-to-bottom.
+2. Change the return paths to dotted arrows (`-.->`) and add step numbers so your eye naturally follows the loop in a circle.
+
+Here is the updated diagram code to replace in your README. It will render much cleaner:
+
 ```mermaid
 flowchart TD
-    subgraph Browser Architecture [Browser App e.g., ChatGPT Website]
+    subgraph Browser [Browser Architecture: ChatGPT Website]
         direction TB
-        B_User((You)) -- "Types in browser" --> B_UI[Web Browser]
-        B_UI -- "Sends text over internet" --> B_Wrapper[Cloud Software Wrapper]
+        B_User((You)) -->|1. Types in browser| B_UI[Web Browser]
+        B_UI -->|2. Sends text over internet| B_Wrapper[Cloud Software Wrapper]
         
-        B_Wrapper -- "1. Sends prompt" --> B_LLM{Cloud LLM Engine}
-        B_LLM -- "2. Tool Call: PYTHON" --> B_Wrapper
+        B_Wrapper -->|3. Sends prompt| B_LLM{Cloud LLM Engine}
+        B_LLM -.->|4. Tool Call: PYTHON| B_Wrapper
         
-        B_Wrapper -- "3. Secret Intercept: Runs code" --> B_Exe[Cloud Sandbox Server]
-        B_Exe -- "4. Returns answer" --> B_Wrapper
+        B_Wrapper -->|5. Secret Intercept: Runs code| B_Exe[Cloud Sandbox Server]
+        B_Exe -.->|6. Returns answer| B_Wrapper
         
-        B_Wrapper -- "5. Feeds answer back" --> B_LLM
-        B_LLM -- "6. Final text response" --> B_Wrapper
-        B_Wrapper -- "Displays to user" --> B_UI
+        B_Wrapper -->|7. Feeds answer back| B_LLM
+        B_LLM -.->|8. Final text response| B_Wrapper
+        B_Wrapper -->|Displays to user| B_UI
     end
 
-    subgraph Thick Client Architecture [Thick Client e.g., Cursor / CLI]
+    %% This invisible link forces the Thick Client box to render UNDER the Browser box
+    Browser ~~~ ThickClient
+
+    subgraph ThickClient [Thick Client Architecture: Cursor / CLI]
         direction TB
-        T_User((You)) -- "Types in IDE/CLI" --> T_Wrapper[Local App: Cursor / CLI]
+        T_User((You)) -->|1. Types in IDE/CLI| T_Wrapper[Local App: Cursor / CLI]
         
-        T_Wrapper -- "1. API Request over internet" --> T_LLM{Cloud LLM Engine}
-        T_LLM -- "2. Tool Call: RUN_TERMINAL" --> T_Wrapper
+        T_Wrapper -->|2. API Request over internet| T_LLM{Cloud LLM Engine
+        T_LLM -.->|3. Tool Call: RUN_TERMINAL| T_Wrapper
         
-        T_Wrapper -- "3. Secret Intercept: Runs code" --> T_Exe[YOUR Local OS / Hard Drive]
-        T_Exe -- "4. Returns terminal output" --> T_Wrapper
+        T_Wrapper -->|4. Secret Intercept: Runs code| T_Exe[YOUR Local OS / Hard Drive]
+        T_Exe -.->|5. Returns terminal output| T_Wrapper
         
-        T_Wrapper -- "5. Feeds output back via API" --> T_LLM
-        T_LLM -- "6. Final text response" --> T_Wrapper
-        T_Wrapper -- "Displays in IDE" --> T_User
+        T_Wrapper -->|6. Feeds output back via API| T_LLM
+        T_LLM -.->|7. Final text response| T_Wrapper
+        T_Wrapper -->|Displays in IDE| T_User
     end
 
     %% Styling
@@ -129,8 +148,6 @@ flowchart TD
     class B_LLM,T_LLM brain;
 
 ```
-
-* **The Pro Takeaway:** The LLM itself *never used a tool*. It just used its autocomplete engine to generate a text request, and the software wrapper did the actual work—either in the cloud or on your local system.
 
 ### Trick 4: The "Are We There Yet?" Trick (The Loop)
 
