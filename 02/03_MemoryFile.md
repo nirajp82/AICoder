@@ -1,4 +1,4 @@
-# Week 1, Day 2 (Part 4): The Project Memory File (`agents.md`)
+# Week 1, Day 2 (Part 3): The Project Memory File (`agents.md`)
 
 ## 1. Introduction to Markdown and why LLMs Love It
 
