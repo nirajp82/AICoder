@@ -44,9 +44,7 @@ The inclusion of an execution file is not static. It works on a hierarchy.
 
 A robust configuration document manages goals, success barriers, and engineering limits.
 
-### INJECT IMAGE HERE: `image_863b48.jpg`
-
-> **Image Placement Note:** Place your original `image_863b48.jpg` reference here.
+<img width="1040" height="1002" alt="image" src="https://github.com/user-attachments/assets/bc64f56b-26f5-489b-9d8c-20282b393c21" />
 
 ### The Instructor's Core Rules (Python Example)
 
