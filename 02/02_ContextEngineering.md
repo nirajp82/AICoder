@@ -10,7 +10,7 @@ A couple of years ago, "Prompt Engineering" was a dedicated job title focused si
 
 To engineer context properly, you must understand all the different components that are packaged together to form the single input sent to the LLM.
 
-<img width="870" height="552" alt="image" src="https://github.com/user-attachments/assets/b4f87f37-2d21-4a91-a209-3f4a66b41a24" />
+<img width="1022" height="956" alt="image" src="https://github.com/user-attachments/assets/886cff0f-6abd-4b41-a500-07b502c4d9cc" />
 
 #### Native Markdown Backup Diagram (Dark Theme Optimized):
 
