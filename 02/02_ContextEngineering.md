@@ -1,130 +1,194 @@
-# Week 1, Day 2 (Part 3): Context Engineering & Memory Architecture
+# Week 1, Day 2 (Part 2): Context Engineering & Memory Architecture
 
-## 1. The Paradigm Shift: Prompt vs. Context Engineering
+Possibly the single most popular expression in the AI engineering world last year was **Context Engineering**. Because Large Language Models (LLMs) are entirely stateless, they rely exclusively on the input you provide to generate the most likely following tokens.
 
-In the early days of generative AI, **Prompt Engineering** was treated as a primary discipline. It focused on the user-facing interface layer: *how* to phrase an isolated instruction to elicit a single text response.
-
-As we transition into building **Autonomous Coding Agents** (such as *Cursor Agent*, *Claude Code*, or *Antigravity*), prompt engineering collapses. Because LLMs are strictly stateless mathematical engines, their output at step 50 of an autonomous loop depends entirely on the total informational ecosystem loaded into the model at that exact millisecond.
-
-Managing this holistic ecosystem is **Context Engineering**.
-
-| Dimension | Prompt Engineering (The Micro View) | Context Engineering (The Macro Architecture) |
-| --- | --- | --- |
-| **Operational Scope** | Single-turn, static inputs. | Multi-turn, dynamic, streaming token state. |
-| **Core Question** | *"How should I phrase this specific instruction?"* | *"What does the model need to know and access right now?"* |
-| **System Actor** | User-facing, ad-hoc, manual. | Developer-facing, system-oriented, automated. |
-| **Resource View** | Treats the prompt as an infinite notepad. | Optimizes a finite mathematical **Attention Budget**. |
-| **Failure Mode** | Solves ambiguous text phrasing. | Prevents systemic context drift, tool pollution, and memory rot. |
+A couple of years ago, "Prompt Engineering" was a dedicated job title focused simply on figuring out the best way to ask an LLM a question. Today, that concept has evolved into Context Engineering. This discipline recognizes that success is not just about the prompt itself; it is about architecting all the surrounding tools, rules, and memory that give the LLM the exact right information to achieve your goal.
 
 ---
 
-## 2. The Anatomy of a Live Context Package
+## The Anatomy of the Context Stack
 
-When an AI coding agent executes a loop, it assembles a massive, highly structured token payload. This package is fed into the model during every single inference cycle. The complete token payload is broken down into five distinct structural layers:
+To engineer context properly, you must understand all the different components that are packaged together to form the single input sent to the LLM.
+
+<img width="870" height="552" alt="image" src="https://github.com/user-attachments/assets/b4f87f37-2d21-4a91-a209-3f4a66b41a24" />
+
+#### Native Markdown Backup Diagram (Dark Theme Optimized):
 
 ```mermaid
-block-beta
-    columns 1
-    Title["The Context Window Package (Total Token State)"]
+flowchart TD
+    subgraph Stack [The Context Window Stack]
+        direction TB
+        SP[System Prompt: overall framing]
+        T[Tools: description of capabilities]
+        M[Memory: resources that persist]
+        
+        subgraph CH [Conversation History / Messages]
+            direction TB
+            U[User messages]
+            R[LLM reasoning]
+            Rep[LLM replies]
+            C[Code generated]
+            TC[Tools called]
+            Res[Results of code and tools]
+            
+            U ~~~ R ~~~ Rep ~~~ C ~~~ TC ~~~ Res
+        end
+        
+        SP ~~~ T ~~~ M ~~~ CH
+    end
     
-    SystemPrompt["1. SYSTEM PROMPT (The Operational Frame)
-    • Persona Allocation (e.g., 'You are an elite systems engineer')
-    • Strict Behavioral Guardrails, Core Rules, and Tone Constraints"]
+    classDef layer1 fill:none,stroke:#818cf8,stroke-width:3px,color:#e0e7ff;
+    classDef layer2 fill:none,stroke:#60a5fa,stroke-width:3px,color:#dbeafe;
+    classDef layer3 fill:none,stroke:#9333ea,stroke-width:3px,color:#9333ea;
+    classDef layer4 fill:none,stroke:#a78bfa,stroke-width:3px,color:#ddd6fe;
     
-    Tools["2. TOOL SCHEMA INTERFACE (The Capability Menu)
-    • Technical definitions of every available function (e.g., JSON schemas)
-    • Text-to-Action routing protocol boundaries"]
-    
-    AgentsMD["3. PERSISTENT PROJECT MEMORY (Project Configuration)
-    • Live injected files: 'agents.md' / 'claude.md' / 'gemini.md'
-    • Rigid architectural maps, active folder hierarchies, and repo standards"]
-    
-    History["4. ACTIVE LOG & SESSION HISTORY (The Scratchpad)
-    • Linear conversation thread (User prompts + Assistant responses)
-    • Step-by-Step Chain-of-Thought reasoning tokens
-    • Executed Code Blocks and Raw Terminal/Tool Outputs"]
-    
-    NewPrompt["5. IMMEDIATE INFERENCE TRIGGER (The Delta)
-    • The localized next step, immediate objective, or user evaluation response"]
-    
-    Title ~ SystemPrompt ~ Tools ~ AgentsMD ~ History ~ NewPrompt
-    
-    %% Dark Mode Harmonized Styling (Transparent Fills + Distinct Borders + Safe Text Colors)
-    style Title fill:none,stroke:#ffffff,stroke-width:2px,color:#ffffff
-    style SystemPrompt fill:none,stroke:#818cf8,stroke-width:3px,color:#e0e7ff
-    style Tools fill:none,stroke:#60a5fa,stroke-width:3px,color:#dbeafe
-    style AgentsMD fill:none,stroke:#fb923c,stroke-width:3px,color:#ffedd5
-    style History fill:none,stroke:#f472b6,stroke-width:3px,color:#fce7f3
-    style NewPrompt fill:none,stroke:#4ade80,stroke-width:3px,color:#dcfce3
+    class SP layer1;
+    class T layer2;
+    class M layer3;
+    class CH layer4;
 
 ```
 
-### Deep Dive: `agents.md` as Project Memory
+---
 
-In agentic coding workflows, developers utilize a dedicated configuration file—`agents.md` (named `claude.md` in Claude Code or `gemini.md` in Antigravity).
+## Real-World Example: Building a .NET Microservice
 
-* This file serves as a **highly visible anchor** injected into the system at runtime.
-* It explicitly documents your folder schemas, runtime environments, preferred libraries, and target milestone checklists. By forcing this file into Layer 3 of the package, you guarantee the agent doesn't waste its attention budget guessing how your project is organized.
+Here is the exact breakdown of the context layers alongside a concrete, step-by-step example of what specific instructions go into each layer when building a **.NET Microservice**:
+
+### Layer 1: The System Prompt
+
+* **What it is:** The most crucial, general information at the very beginning of the input that frames the overall situation.
+* **Purpose:** It defines the exact role the LLM is playing (e.g., an agent responsible for writing code, or a customer support agent for an airline), the overall job, the tone it should take, and the approach it should use.
+* **Microservice Instruction Example:**
+> *"You are an elite backend software engineer specializing in C# and .NET 8. Your objective is to build high-performance, scalable microservices. You must write clean, asynchronous C# code, utilize dependency injection strictly, use structured routing architectures, and always communicate your architectural decisions clearly before generating code."*
+
+
+
+### Layer 2: Tools
+
+* **What it is:** A set of descriptions detailing the different capabilities and actions the LLM has access to. *(Note: Some developers consider tool descriptions to be a definitional part of the System Prompt itself; it doesn't particularly matter if you think of them as the same thing or two separate chunks, it is just about how you label it).*
+* **Purpose:** It teaches the LLM that if it outputs specific tokens (like the word "Python" followed by code), the surrounding software wrapper will interpret those tokens, execute that action on our behalf, and return the results to it during a second call.
+* **Microservice Instruction Example:**
+> *"You have access to the `dotnet_cli` tool. If you need to add a NuGet package, output the command `dotnet add package [PackageName]`. You also have access to `ef_core_migrations`. Use this tool to execute `dotnet ef database update` when database schemas change."*
+
+
+
+### Layer 3: Memory
+
+* **What it is:** Information designed to persist across potentially multiple different conversations, sometimes referred to as long-term or medium-term memory.
+* **Purpose:** To store general resources and global configurations that might change over time, but that the agent should always be able to return and reference.
+* **Microservice Instruction Example:**
+> *"Global Engineering Standards: All microservices in this organization must use Serilog for structured logging. Databases must use PostgreSQL via Entity Framework Core. Authentication is always handled via standard JWT bearer tokens validated against Azure Active Directory."*
+
+
+
+### Layer 4: Conversation History / Messages
+
+* **What it is:** The massive block of text that creates the "illusion of memory". Because the LLM is completely stateless, every single interaction so far must be squeezed into the context next.
+* **Components Included:**
+* User messages.
+* LLM reasoning tokens (the tokens it generates to describe its thought process).
+* LLM replies.
+* Code generated by the LLM.
+* Tools the LLM decided to call.
+* Results and outputs returned from those code and tool executions.
+
+
+* **Microservice Execution Log Example:**
+* **User Prompt:** *"Create the `Product` domain entity and compile it."*
+* **LLM Reasoning:** *"I need to create a C# record or class for the Product entity with standard properties like Id, Name, and Price, ensuring it maps cleanly to EF Core."*
+* **Generated Code Response:** `public class Product { public Guid Id { get; set; } public string Name { get; set; } public decimal Price { get; set; } }`
+* **Tool Execution:** The wrapper intercepts a request to run `dotnet build`.
+* **Tool Return Result:** `Build succeeded. 0 Warning(s). 0 Error(s).` All of this history is combined to frame the next token calculation.
+
+
 
 ---
 
-## 3. The Mathematics of the Context Window
+## The Project Memory File: `agents.md`
 
-Andrej Karpathy notes a clean structural analogy: **The LLM is the CPU; its Context Window is the RAM.** Just like physical hardware RAM, the context window is a strictly bounded, highly volatile workspace.
+In addition to the standard memory layer, coding agents utilize a special, dedicated file that gets shoved into the context every single time.
 
-### Core Model Constraints (2026 Reference Metrics)
+* **Generic Name:** `agents.md`.
+* **Claude Code:** `claude.md`.
+* **Antigravity (Google):** `gemini.md`.
 
-When architecting agent loops, you must design within the hard ceilings of the leading foundational engines:
+This file is a persistent resource that describes special things about the specific project you are working on, particular coding standards, or things about your objective that you want to be in the memory of the AI agent while it is writing code for us. While it is more complicated than sending it "every single time," consider it to be every single time for now.
 
-* **Anthropic Claude 4.5 (Sonnet / Opus):** 200,000 Tokens
-* **OpenAI GPT-5.2:** 400,000 Tokens
-* **Google Gemini (via Antigravity):** 1,000,000 Tokens
-
-### The Attention Budget and $N^2$ Degradation
-
-As a professional AI Engineer, you must never treat these massive capacities as targets. **The quality of your agent's work degrades exponentially long before you hit the hard cap.**
-
-This degradation is caused by a core architectural constraint of the Transformer mechanism: **Self-Attention**.
-
-* **The Math:** Transformer models use an all-to-all attention calculation. Every single token inside the context window evaluates its relationship against every other token. This creates a quadratic processing scale:
-
-$$Relationship\ Space = N^2$$
-
-Where $N$ represents the total number of tokens inside the window.
-
-* **The Engineering Impact:** As your session history grows, the relationship space explodes. This causes three distinct architectural failures:
-1. **Context Distraction:** Superfluous tokens drown out the core system instructions. The model's attention weights get diffused across millions of irrelevant pairwise relationships.
-2. **Context Rot (Semantic Drift):** Over multiple turns, minor errors, trailing feedback logs, and irrelevant terminal outputs pollute the window, causing the model to lose coherence or repeat previous mistakes.
-3. **The Golden Rule:** An LLM operates at peak accuracy, razor-sharp instruction adherence, and highest structural performance at the absolute beginning of a session when the context is tight, curated, and completely free of filler tokens. **Less is always more.**
+* **Microservice Configuration Example inside `agents.md`:**
+> *"Project Context: Inventory Management Microservice. Architecture: Clean Architecture. All domain entities must reside inside the `Inventory.Domain` project layer. All database context setups must map inside `Inventory.Infrastructure`. All REST endpoints must be Minimal APIs defined cleanly in the `Inventory.API` orchestration layer. Use xUnit for all unit testing coverage."*
 
 
 
 ---
 
-## 4. Context Compacting: Automated Optimization
+## Context Windows and The "Less is More" Law
 
-Because multi-turn agent execution rapidly drains the token attention budget, professional agentic platforms build automated middleware layers to execute **Context Compacting**.
+Every LLM has a "Context Window Limit"—the maximum number of tokens it can examine in its input in order to predict the next tokens. If you try to pass in more tokens than its maximum context window, it will fail. That is considered a break; it can't handle it, and it will be an error.
+
+### Hard Token Capacity Metrics (2026 Reference)
+
+* **Anthropic Claude 4.5 (Sonnet & Opus):** 200,000 tokens *(About half of GPT)*
+* **OpenAI GPT-5.2:** 400,000 tokens
+* **Google Gemini (in Antigravity):** 1,000,000 tokens *(Much greater limit)*
+
+### The Degradation of Accuracy Performance
+
+While developers frequently obsess over these maximum limits, the reality is that **performance degrades long before you hit the maximum window size**.
+
+* "Performance" in this sense does not mean processing speed; it refers to the accuracy and quality of the results.
+* If you shove too much into the context, you get poorer results, the model starts to lose coherence, and it begins to forget things as you fill up the context more and more.
+* Conversely, you tend to get the best performance at the very start of your conversation when the context is super empty and it's only got a little bit to pay attention to.
+* It's not a binary choice between "it works" or "it fails." Less is more when it comes to filling up the context.
+
+---
+
+## Context Compacting
+
+To prevent the context window from filling up and causing errors, advanced platforms (like Claude Code) utilize a feature called **Compacting**.
+
+<img width="1043" height="1012" alt="image" src="https://github.com/user-attachments/assets/66eb8ec9-3d82-4f61-8634-95a40be22142" />
+
+#### Native Markdown Backup Diagram (Dark Theme Optimized):
 
 ```mermaid
-flowchart LR
-    A[Bloated History: Turn 1-50] -->|Threshold Triggered| B(Compactor Engine)
-    B -->|LLM Semantic Synthesis| C[Dense Context Summary]
-    D[System Rules + agents.md] -->|Preserved| E[Optimized Context Window]
-    C -->|Injected| E
-    A -.->|Purged from RAM| F[Deleted Logs]
+flowchart TD
+    subgraph CompactedStack [Compacting: Freeing up space in the context]
+        direction TB
+        SP[System Prompt: overall framing]
+        T[Tools: description of capabilities]
+        M[Memory: resources that persist]
+        A[AGENTS.md]
+        
+        subgraph CH [Conversation History / Messages]
+            direction TB
+            Summ[Summary of earlier messages]
+        end
+        
+        SP ~~~ T ~~~ M ~~~ A ~~~ CH
+    end
     
-    style A fill:#fee2e2,stroke:#ef4444
-    style E fill:#dcfce3,stroke:#22c55e
+    classDef layer1 fill:none,stroke:#818cf8,stroke-width:3px,color:#e0e7ff;
+    classDef layer2 fill:none,stroke:#60a5fa,stroke-width:3px,color:#dbeafe;
+    classDef layer3 fill:none,stroke:#9333ea,stroke-width:3px,color:#9333ea;
+    classDef layerYellow fill:none,stroke:#fbbf24,stroke-width:3px,color:#fbbf24;
+    classDef layer4 fill:none,stroke:#a78bfa,stroke-width:3px,color:#ddd6fe;
+    
+    class SP layer1;
+    class T layer2;
+    class M layer3;
+    class A layerYellow;
+    class CH layer4;
 
 ```
 
-### The Mechanism
+* **How it Works:** Rather than allowing the LLM to fail, the software detects when the context window is almost filled up. It runs a process that essentially looks back at the whole conversation history, summarizes it, and replaces everything with a little summary of what was there before, freeing up tons of space in the workspace.
 
-When the active session log fills up a predetermined percentage of the context window, the system software pauses the active agent loop. It passes the raw execution logs into a compression utility, forcing the LLM to write a structurally dense, bulleted semantic summary of everything established so far. The system then deletes the thousands of lines of raw text logs and swaps them out for this minimal summary block—instantly reclaiming massive workspace "RAM."
+### The Developer's Dilemma: Old Guard vs. New Guard
 
-### The Engineering Evolution
+* **The Fear of the Compactor:** Historically, developers deeply mistrusted this process because it changes the game suddenly. We are trusting the LLM to do a good job of figuring out what's important and what's not from the history. Sometimes it doesn't. It misses an important thing we care a lot about that we told it during the conversation. That gets removed during summary, and as a result, the LLM appears to forget something or makes the same mistake twice, which is super frustrating.
+* **The Manual Workaround:** Because of this lack of trust—especially if it runs while in the middle of doing a task—many developers (including the instructor) traditionally preferred to manually intervene: they would look at what happened, stop the agent, manually rewrite their `agents.md` file to keep careful note of everything, and start up the agent again fresh.
+* **The Modern 2026 Best Practice:** Compacting has gotten significantly better in recent history. As of 2026, there is far less reason to fear the compactor. It does a really fine job of summarizing the conversation history, keeping relevant data, and freeing up space. **Don't be stubborn—trust the compactor out of the box.** Let it manage your context space cleanly.
 
-* **The Old Guard Approach (The Fear):** Historically, developers deeply mistrusted compactors. Early models suffered from **Context Poisoning**—the compaction step would omit critical edge cases or subtle code constraints. The agent would resume work, immediately forget what it had discovered 10 steps prior, and write buggy, regressive code. To bypass this, engineers manually stopped the agent, parsed the text logs, hand-updated `agents.md`, and completely killed/restarted the session terminal.
-* **The Modern 2026 Best Practice:** State-of-the-art compression architectures are highly graph-aware and retain critical technical nuances flawlessly. Manual intervention is an anti-pattern that slows down automated loops. **Trust the compactor out of the box.** Let the system manage its attention budget dynamically while you focus entirely on guiding the high-level project milestones.
-
----
+#### References:
+- https://www.udemy.com/course/ai-coder-from-vibe-coder-to-agentic-engineer/learn/lecture/54780267#overview 
