@@ -49,12 +49,13 @@ block-beta
     
     Title ~ SystemPrompt ~ Tools ~ AgentsMD ~ History ~ NewPrompt
     
-    style Title fill:#f3f4f6,stroke:#111827,stroke-width:2px,color:#111827
-    style SystemPrompt fill:#e0e7ff,stroke:#4f46e5,stroke-width:2px
-    style Tools fill:#dbeafe,stroke:#2563eb,stroke-width:2px
-    style AgentsMD fill:#ffedd5,stroke:#ea580c,stroke-width:2px
-    style History fill:#fce7f3,stroke:#db2777,stroke-width:2px
-    style NewPrompt fill:#dcfce3,stroke:#16a34a,stroke-width:2px
+    %% Dark Mode Harmonized Styling (Transparent Fills + Distinct Borders + Safe Text Colors)
+    style Title fill:none,stroke:#ffffff,stroke-width:2px,color:#ffffff
+    style SystemPrompt fill:none,stroke:#818cf8,stroke-width:3px,color:#e0e7ff
+    style Tools fill:none,stroke:#60a5fa,stroke-width:3px,color:#dbeafe
+    style AgentsMD fill:none,stroke:#fb923c,stroke-width:3px,color:#ffedd5
+    style History fill:none,stroke:#f472b6,stroke-width:3px,color:#fce7f3
+    style NewPrompt fill:none,stroke:#4ade80,stroke-width:3px,color:#dcfce3
 
 ```
 
