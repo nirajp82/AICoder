@@ -34,7 +34,7 @@ The exact name of the file depends on the tool you are using, but the industry i
 
 The inclusion of an execution file is not static. It works on a hierarchy.
 
-* **Project Root:** You typically have one file at the top of your project root directory (e.g., the `instant` directory from yesterday). This is always included in the context.
+* **Project Root:** You typically have one file at the top of your project root directory. This is always included in the context.
 * **Subdirectories:** You can have an `agents.md` at any level of nesting (a sub-sub-sub directory). This file is **only** read in when the agent is working on files in that specific folder or deeper.
 * **The Override Law:** When working on a file, the agent reads the innermost `agents.md`, then works backwards through all parent directories. Information in the innermost file overrides information in any outer directory. This allows you to apply highly specific rules deep in your project.
 
