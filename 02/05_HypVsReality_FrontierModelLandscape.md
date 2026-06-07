@@ -7,14 +7,32 @@ While AI engines are a massive value add to modern software development, it is c
 ### The Extremes of AI Productivity
 
 ```mermaid
-line-chart
-    title AI Productivity Gains by Project Type
-    x-axis Greenfields/Boilerplate --> Complex/Innovative/Enterprise
-    y-axis Efficiency Multiplier
-    bar [10x (Radical Leap)]
-    bar [2x (Significant Aid)]
-    bar [1.1x (Incremental Gains)]
-    bar [0.5x (Net Slowdown)]
+flowchart LR
+    %% The Spectrum Container
+    subgraph Spectrum [AI Productivity Spectrum by Project Type]
+        direction LR
+        
+        G[Greenfields & Boilerplate\n'Days turn into Minutes'] --->|Project Complexity Increases| C[Complex & Innovative\n'Incremental Gains / Debug Traps']
+    end
+
+    %% Data Points Mapping the Spectrum
+    P1[10x Multiplier\nRadical Leap] -.-> G
+    P2[2x Multiplier\nSignificant Aid] -.-> G
+    P3[1.1x Multiplier\nMinor Efficiency] -.-> C
+    P4[0.5x Multiplier\nNet Slowdown] -.-> C
+
+    %% Dark-Theme Harmonized Styling
+    classDef highGain fill:none,stroke:#4ade80,stroke-width:2px,color:#dcfce3;
+    classDef midGain fill:none,stroke:#60a5fa,stroke-width:2px,color:#dbeafe;
+    classDef lowGain fill:none,stroke:#fb923c,stroke-width:2px,color:#ffedd5;
+    classDef netLoss fill:none,stroke:#f87171,stroke-width:2px,color:#fee2e2;
+    classDef container fill:none,stroke:#ffffff,stroke-width:1px,color:#ffffff;
+
+    class P1 highGain;
+    class P2 midGain;
+    class P3 lowGain;
+    class P4 netLoss;
+    class Spectrum container;
 
 ```
 
