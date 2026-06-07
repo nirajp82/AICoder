@@ -2,7 +2,7 @@
 
 ## 1. What is an LLM (Large Language Model)?
 
-Think of an LLM (like GPT) as a super-powered version of the "autocomplete" feature on your phone's keyboard. It has read almost everything on the internet to learn how humans talk, so it is very good at guessing what word comes next.
+Think of an LLM (like GPT) as a master player in a massive game of "fill-in-the-blank." Because it has digested almost every book, article, and code snippet on the internet, it doesn't "think" up answers from scratch—it mathematically calculates the exact puzzle piece of text that most logically comes next based on billions of examples it has seen before.
 
 * **Tokens (How it reads):** The AI does not read whole words. It chops words into smaller pieces called **tokens** (sometimes a whole word, sometimes just a few letters).
 * **Probability (How it guesses):** It does not just pick the single best word. It gives a score to *every* possible next word. For the phrase "Two plus two is", the word "four" gets a nearly 100% score, and the word "banana" gets a 0% score.
@@ -64,6 +64,8 @@ The raw AI brain is actually pretty basic. To make it feel like you are chatting
 > 2. It processes that new text, applies the rule, and generates: *"We know at least one is heads, so TT is impossible. That leaves HH, HT, and TH."*
 > 3. It processes *that* new text, and generates: *"Out of those 3 options, 2 of them (HT and TH) contain a tails."*
 > 4. **The Final Answer:** Now, the AI must guess the final answer. Because the words *"2 out of 3"* are sitting right there in the text it just generated, its engine is mathematically forced to predict **2/3**.
+> 
+> 
 
 ### Trick 3: The "Text-to-Action" Protocol (Tool Calling)
 
@@ -75,6 +77,7 @@ The raw AI brain is actually pretty basic. To make it feel like you are chatting
 2. The AI realizes its autocomplete can't solve this accurately, so it generates the special text token: `PYTHON: import math; math.sqrt(math.pi)`.
 3. **The secret intercept:** The AI *does not run this code*. Your software wrapper sees the word `PYTHON:`, instantly pauses the AI, takes that code, runs it on the computer, gets the exact answer (`1.772`), and secretly pastes that answer back into the AI's context window.
 4. The AI reads the injected answer, and then confidently translates it into a normal, human-readable sentence for you.
+
 
 * **The Pro Takeaway:** The LLM itself *never used a tool*. It just used its autocomplete engine to generate a text request, and the software wrapper acted as the hands that did the actual work.
 * **Where it Executes (Browser vs. Thick Client):** Where this intercept actually executes the code depends entirely on the architecture of the application wrapper you are using.
@@ -91,17 +94,7 @@ The raw AI brain is actually pretty basic. To make it feel like you are chatting
 
 #### Architecture Diagram: The Secret Intercept
 
-Mermaid can sometimes try to squash subgraphs side-by-side, which creates a tangled, unreadable spiderweb of arrows.
-
-To fix this and make it perfectly readable, we can do two things:
-
-1. Add an "invisible link" (`~~~`) between the two boxes to force Mermaid to stack them strictly top-to-bottom.
-2. Change the return paths to dotted arrows (`-.->`) and add step numbers so your eye naturally follows the loop in a circle.
-
-Here is the updated diagram code to replace in your README. It will render much cleaner:
-
 ```mermaid
-
 flowchart TD
     subgraph Browser [Browser Architecture: ChatGPT Website]
         direction TB
@@ -126,7 +119,7 @@ flowchart TD
         direction TB
         T_User((You)) -->|1. Types in IDE/CLI| T_Wrapper[Local App: Cursor / CLI]
         
-        T_Wrapper -->|2. API Request over internet| T_LLM{Cloud LLM Engine
+        T_Wrapper -->|2. API Request over internet| T_LLM{Cloud LLM Engine}
         T_LLM -.->|3. Tool Call: RUN_TERMINAL| T_Wrapper
         
         T_Wrapper -->|4. Secret Intercept: Runs code| T_Exe[YOUR Local OS / Hard Drive]
@@ -181,7 +174,6 @@ If you ask the model to just answer the question, its engine looks at the tokens
 * **Scenario B: Chain of Thought Prompting (Reasoning)**
 If you force the model to output the algebraic steps first, the autoregressive engine is forced to evaluate the logic token-by-token.
 *The Output:*
-
 1. Let $b$ be the cost of the ball and $B$ be the cost of the bat.
 2. We know the total is `$1.10`: $B + b = 1.10$
 3. We know the bat is `$1.00` more than the ball: $B = b + 1.00$
@@ -189,6 +181,7 @@ If you force the model to output the algebraic steps first, the autoregressive e
 5. Combine terms: $2b + 1.00 = 1.10$
 6. Subtract `$1.00`: $2b = 0.10$
 7. Divide by 2: $b = 0.05$
+
 
 *The Reality:* By the time the AI needs to generate the final answer, the token `0.05` is mathematically the only possible next token. The AI solved it correctly because we forced the Context Window to contain the proof.
 
@@ -220,5 +213,3 @@ If you tell an AI coding app like Cursor: *"Build me a first-person shooter game
 | **The Goal** | You provided the prompt: "Build a first-person shooter." |
 | **The Tools (Trick 3)** | The LLM generates text asking the software to use tools (e.g., `WRITE_FILE: index.html`, or `RUN_TERMINAL: npm start`). |
 | **The Loop (Trick 4)** | The software executes the tool, feeds the result back to the LLM, and asks, "Is the game done?" The LLM loops again and again, writing code file by file, until the game is finished. |
-
----
