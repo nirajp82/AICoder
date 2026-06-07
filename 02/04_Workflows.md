@@ -4,6 +4,9 @@ When working with mysterious, magical coding agents, how you organize your activ
 
 Workflows map directly to the amount of trust you place in the LLM. The instructor breaks this evolution down into six distinct stages, divided into two distinct engineering mindsets: the structured "2025 Mindset" and the autonomous "2026 Mindset."
 
+
+<img width="912" height="937" alt="image" src="https://github.com/user-attachments/assets/72e91c3b-5cee-416e-ab46-95021f5b9f0e" />
+
 ---
 
 ## The 2025 Mindset: High-Control Workflows
