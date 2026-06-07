@@ -2,7 +2,7 @@
 
 ## 1. What is an LLM (Large Language Model)?
 
-Think of an LLM (like GPT) as a master player in a massive game of "fill-in-the-blank." Because it has digested almost every book, article, and code snippet on the internet, it doesn't "think" up answers from scratch—it mathematically calculates the exact puzzle piece of text that most logically comes next based on billions of examples it has seen before.
+Think of an LLM (like GPT) as a super-powered version of the "autocomplete" feature on your phone's keyboard. It has read almost everything on the internet to learn how humans talk, so it is very good at guessing what word comes next.
 
 * **Tokens (How it reads):** The AI does not read whole words. It chops words into smaller pieces called **tokens** (sometimes a whole word, sometimes just a few letters).
 * **Probability (How it guesses):** It does not just pick the single best word. It gives a score to *every* possible next word. For the phrase "Two plus two is", the word "four" gets a nearly 100% score, and the word "banana" gets a 0% score.
