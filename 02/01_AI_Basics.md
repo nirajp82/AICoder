@@ -64,8 +64,6 @@ The raw AI brain is actually pretty basic. To make it feel like you are chatting
 > 2. It processes that new text, applies the rule, and generates: *"We know at least one is heads, so TT is impossible. That leaves HH, HT, and TH."*
 > 3. It processes *that* new text, and generates: *"Out of those 3 options, 2 of them (HT and TH) contain a tails."*
 > 4. **The Final Answer:** Now, the AI must guess the final answer. Because the words *"2 out of 3"* are sitting right there in the text it just generated, its engine is mathematically forced to predict **2/3**.
-> 
-> 
 
 ### Trick 3: The "Text-to-Action" Protocol (Tool Calling)
 
@@ -103,6 +101,7 @@ To fix this and make it perfectly readable, we can do two things:
 Here is the updated diagram code to replace in your README. It will render much cleaner:
 
 ```mermaid
+
 flowchart TD
     subgraph Browser [Browser Architecture: ChatGPT Website]
         direction TB
