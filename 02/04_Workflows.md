@@ -69,35 +69,9 @@ This mindset involves letting go of the reins and allowing the LLM to manage its
 The classic engineering answer is that there is no single "right" approach. The correct workflow depends entirely on the nature of your project and your risk appetite.
 
 | Project Profile | Recommended Mindset | Applicable Workflows |
-| --- | --- | --- |
-| **Mission-Critical & Enterprise:**<br>
-
-<br>• Large existing codebases.<br>
-
-<br>• Commercial SaaS platforms.<br>
-
-<br>• Highly innovative/bleeding-edge code (e.g., building MCP servers). | **The 2025 Mindset**<br>
-
-<br>(Control & Verification) | 1. Micromanagement<br>
-
-<br>2. Plan/Execute/Review<br>
-
-<br>3. Spec-Driven |
-| **Prototyping & Boilerplate:**<br>
-
-<br>• Building an MVP or Pilot.<br>
-
-<br>• Starting from scratch (Empty Directory).<br>
-
-<br>• High risk appetite.<br>
-
-<br>• Generating standard boilerplate (HTML, React, basic CRUD backends). | **The 2026 Mindset**<br>
-
-<br>(Autonomy & Scale) | 4. YOLO<br>
-
-<br>5. Ralph Loops<br>
-
-<br>6. Multi-Agent Swarms |
+| :--- | :--- | :--- |
+| **Mission-Critical & Enterprise:**<br>• Large existing codebases.<br>• Commercial SaaS platforms.<br>• Highly innovative/bleeding-edge code (e.g., building MCP servers). | **The 2025 Mindset**<br>(Control & Verification) | 1. Micromanagement<br>2. Plan/Execute/Review<br>3. Spec-Driven |
+| **Prototyping & Boilerplate:**<br>• Building an MVP or Pilot.<br>• Starting from scratch (Empty Directory).<br>• High risk appetite.<br>• Generating standard boilerplate (HTML, React, basic CRUD backends). | **The 2026 Mindset**<br>(Autonomy & Scale) | 4. YOLO<br>5. Ralph Loops<br>6. Multi-Agent Swarms |
 
 ### The Instructor's Professional Stance
 
