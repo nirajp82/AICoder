@@ -1,0 +1,2 @@
+- https://jellyfin.org/docs/general/contributing/llm-policies/
+- 
