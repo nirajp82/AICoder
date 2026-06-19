@@ -1,2 +1,4 @@
 - https://jellyfin.org/docs/general/contributing/llm-policies/
 - [https://openrouter.ai](https://openrouter.ai/)
+- https://www.anthropic.com/research/AI-assistance-coding-skills
+- https://artificialanalysis.ai/
