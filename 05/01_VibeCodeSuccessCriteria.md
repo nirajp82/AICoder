@@ -1,6 +1,6 @@
 # Way to "Vibe Code" for Success
 
-This guide breaks down the trainer's core methodology for effectively writing software alongside AI models (LLMs). The central premise is that developers must transition from pure coders to active managers of AI agents.
+Core methodology for effectively writing software alongside AI models (LLMs). The central premise is that developers must transition from pure coders to active managers of AI agents.
 
 ## Core Philosophy: Be the Boss
 
