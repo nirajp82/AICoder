@@ -2,3 +2,5 @@
 - [https://openrouter.ai](https://openrouter.ai/)
 - https://www.anthropic.com/research/AI-assistance-coding-skills
 - https://artificialanalysis.ai/
+- https://simonwillison.net/guides/agentic-engineering-patterns/
+- https://simonwillison.net/2025/Oct/7/vibe-engineering/
