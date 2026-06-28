@@ -5,3 +5,4 @@
 - https://simonwillison.net/guides/agentic-engineering-patterns/
 - https://simonwillison.net/2025/Oct/7/vibe-engineering/
 - https://platform.openai.com/tokenizer
+- https://opencode.ai/
