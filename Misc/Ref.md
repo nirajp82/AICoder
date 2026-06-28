@@ -27,3 +27,6 @@
 
 * [https://ollama.com/](https://ollama.com/)
   `Ollama` is a free, open-source framework that allows you to download, manage, and run Large Language Models (LLMs)—such as Llama 3, Mistral, and Gemma—directly on your own computer. It provides a simple way to experiment with and deploy local AI models while keeping data on your own machine.
+
+  <img width="617" height="480" alt="image" src="https://github.com/user-attachments/assets/d29d0e98-2e93-4805-9d85-b864d2c184fd" />
+
